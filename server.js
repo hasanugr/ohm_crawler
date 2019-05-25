@@ -57,7 +57,9 @@ app.get('/api/getImdbSearchResults', function (req, res) {
 
       res.on("end", function (chunk) {
         var body = Buffer.concat(chunks);
-        body = JSON.parse(body.toString());
+        body = JSON.parse(body.toString())
+        console.log(body.toString());
+        console.log(body)
         createResponseObject(body);
       });
 
@@ -69,19 +71,24 @@ app.get('/api/getImdbSearchResults', function (req, res) {
 
     function createResponseObject(obj) {
       var searchResponse = []
-      for (var i = 0 ; i < obj.d.length ; i++) {
-        var thisItem = obj.d[i];
-        if (thisItem.id.slice(0,2) === "tt") {
-          var thisObject = {
-            id: thisItem.id,
-            name: thisItem.l,
-            image: typeof thisItem.i !== "undefined" ? thisItem.i.imageUrl : "",
-            year: typeof thisItem.y !== "undefined" ? (thisItem.y).toString() : ""
+      if (obj.d) {
+        for (var i = 0 ; i < obj.d.length ; i++) {
+          var thisItem = obj.d[i];
+          if (thisItem.id.slice(0,2) === "tt") {
+            var thisObject = {
+              id: thisItem.id,
+              name: thisItem.l,
+              image: typeof thisItem.i !== "undefined" ? thisItem.i.imageUrl : "",
+              year: typeof thisItem.y !== "undefined" ? (thisItem.y).toString() : ""
+            }
+            searchResponse.push(thisObject);
           }
-          searchResponse.push(thisObject);
         }
+        finish(searchResponse);
+      }else {
+        res.status(304)
+          .send("Sonuç bulunamadı.")
       }
-      finish(searchResponse);
     }
 
     function finish(searchResponse) {
