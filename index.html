@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <script src="js/jquery-3.2.1.min.js" type="text/javascript"></script>
+  <link rel="stylesheet" type="text/css" href="style.css">
+  <title>OHM PROJECT</title>
+</head>
+
+<body>
+  <div id="crawler-title">Movie Crawler</div>
+  <div id="crawl-content">
+    <input id="id-input">
+    <button id="id-button">Gönder</button>
+    <div id="response-field">
+    </div>
+  </div>
+  <script>
+    jQuery('body').on('click', '#id-button', function () {
+      jQuery.get("//localhost:3000/api/getImdbData?imdbId=" + jQuery('#id-input').val() + "", function (data) {
+        console.log('Finished.!!');
+        jQuery('#response-field').html('');
+        window.rawData = data;
+        for (var key in window.rawData) {
+          // skip loop if the property is from prototype
+          var keyFixed = typeof window.rawData[key] === 'string' ? window.rawData[key] : JSON.stringify(window
+            .rawData[key]);
+          jQuery('#response-field').append(jQuery('<div class="response-item"> <span class="item-key">' + key +
+            '</span><span class="item-value">' + keyFixed + '</span></div>'));
+        }
+      });
+    })
+  </script>
+</body>
+
+<style></style>
+
+</html>
