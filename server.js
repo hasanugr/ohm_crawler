@@ -71,13 +71,15 @@ app.get('/api/getImdbSearchResults', function (req, res) {
       var searchResponse = []
       for (var i = 0 ; i < obj.d.length ; i++) {
         var thisItem = obj.d[i];
-        var thisObject = {
-          id: thisItem.id,
-          name: thisItem.l,
-          image: typeof thisItem.i !== "undefined" ? thisItem.i.imageUrl : "",
-          year: typeof thisItem.y !== "undefined" ? (thisItem.y).toString() : ""
+        if (thisItem.id.slice(0,2) === "tt") {
+          var thisObject = {
+            id: thisItem.id,
+            name: thisItem.l,
+            image: typeof thisItem.i !== "undefined" ? thisItem.i.imageUrl : "",
+            year: typeof thisItem.y !== "undefined" ? (thisItem.y).toString() : ""
+          }
+          searchResponse.push(thisObject);
         }
-        searchResponse.push(thisObject);
       }
       finish(searchResponse);
     }
