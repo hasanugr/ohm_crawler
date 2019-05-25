@@ -18,7 +18,7 @@
   </div>
   <script>
     jQuery('body').on('click', '#id-button', function () {
-      jQuery.get("//localhost:3000/api/getImdbData?imdbId=" + jQuery('#id-input').val() + "", function (data) {
+      jQuery.get("/api/getImdbData?imdbId=" + jQuery('#id-input').val() + "", function (data) {
         console.log('Finished.!!');
         jQuery('#response-field').html('');
         window.rawData = data;

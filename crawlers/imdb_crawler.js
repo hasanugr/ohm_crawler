@@ -25,7 +25,6 @@ class CrawlerImdb {
   }
 
   getImdbData (callback) {
-    console.log('Start Crawler --> '+Date())
     let isFinishBasics = false;
     let isFinishDetails = false;
 
@@ -43,7 +42,6 @@ class CrawlerImdb {
     }
 
     const finish = () => {
-      console.log('Finish Crawler --> '+Date())
       callback(this)
     }
 

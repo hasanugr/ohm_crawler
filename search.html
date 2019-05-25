@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <script src="js/jquery-3.2.1.min.js" type="text/javascript"></script>
+  <link rel="stylesheet" type="text/css" href="style.css">
+  <title>OHM PROJECT</title>
+</head>
+
+<body>
+  <div id="crawler-title">Search On IMDB</div>
+  <div id="crawl-content">
+    <input id="id-input">
+    <button id="id-button">Gönder</button>
+    <div id="response-field">
+    </div>
+  </div>
+  <script>
+    jQuery('body').on('click', '#id-button', function () {
+      jQuery.get("/api/getImdbSearchResults?searchName=" + jQuery('#id-input').val() + "", function (data) {
+        console.log('Finished.!!');
+        jQuery('#response-field').html('');
+        window.searchData = data;
+        for (var i=0 ; i < window.searchData.length ; i++) {
+          var thisItem = window.searchData[i];
+          jQuery('#response-field').append(jQuery('<div class="response-item" style="width:225px;margin: 10px 0;border: unset;"><img src='+thisItem.image+
+            ' style="width: 150px;height: 225px;"><span class="item-name" style="position: relative;width: 100%;float: left;font-size:18px;">'+thisItem.name+
+              '</span><span style="width: 100%;float: left;">Yıl: '+thisItem.year+'</span><span class="item-id" style="width: 100%;float: left;">'+thisItem.id+
+                '</span></div>'));
+        }
+      });
+    })
+  </script>
+</body>
+
+<style></style>
+
+</html>
