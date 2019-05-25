@@ -58,8 +58,6 @@ app.get('/api/getImdbSearchResults', function (req, res) {
       res.on("end", function (chunk) {
         var body = Buffer.concat(chunks);
         body = JSON.parse(body.toString())
-        console.log(body.toString());
-        console.log(body)
         createResponseObject(body);
       });
 
