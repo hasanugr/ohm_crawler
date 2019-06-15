@@ -1,4 +1,5 @@
 const CrawlerImdb = require('./crawlers/imdb_crawler')
+const CrawlerGetList = require('./crawlers/imdb_getList')
 var express = require('express')
 var app = express();
 
@@ -98,7 +99,22 @@ app.get('/api/getImdbSearchResults', function (req, res) {
     res.status(304)
       .send("Sorgulanacak film ismi girediniz.")
   }
-})
+});
+
+app.get('/api/getMovieList', function (req, res) {
+  let queryList = {
+    genre: req.query.genre,
+    startDate: req.query.startDate,
+    endDate: req.query.endDate,
+    quantity: parseInt(req.query.quantity)
+  }
+  let imdbGetList = new CrawlerGetList(queryList)
+
+  imdbGetList.getImdbData(function (data) {
+    res.status(200)
+        .send(data);
+  })
+});
 
 app.listen(process.env.PORT || 3000, function () {
   console.log('Russian Paradise Bithes');

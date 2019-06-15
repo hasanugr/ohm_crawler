@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <script src="js/jquery-3.2.1.min.js" type="text/javascript"></script>
+  <link rel="stylesheet" type="text/css" href="style.css">
+  <title>OHM PROJECT</title>
+</head>
+
+<body>
+  <div id="crawler-title">Movie List Crawler</div>
+  <div id="crawl-content">
+    <input id="genres" placeholder="Genre = comedy">
+    <input id="startDate" placeholder="Start = 2018-01-01">
+    <input id="endDate" placeholder="End = 2018-12-31">
+    <input id="quantity" placeholder="Quantity = 250">
+    <button id="getListButton">Gönder</button>
+    <div id="response-field">
+    </div>
+  </div>
+  <script>
+    jQuery('body').on('click', '#getListButton', function () {
+      jQuery.get("/api/getMovieList?genre=" + jQuery('#genres').val() + "&year=" + jQuery('#startDate').val() + "," + jQuery('#endDate').val() + "&quantity=" + jQuery('#quantity').val(), function (data) {
+        console.log('Finished.!!');
+        jQuery('#response-field').html('');
+        window.rawData = data;
+        /*for (var key in window.rawData) {
+          // skip loop if the property is from prototype
+          var keyFixed = typeof window.rawData[key] === 'string' ? window.rawData[key] : JSON.stringify(window
+            .rawData[key]);
+          jQuery('#response-field').append(jQuery('<div class="response-item"> <span class="item-key">' + key +
+            '</span><span class="item-value">' + keyFixed + '</span></div>'));
+        }*/
+      });
+    })
+  </script>
+</body>
+
+<style></style>
+
+</html>
