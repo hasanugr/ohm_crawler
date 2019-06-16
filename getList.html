@@ -11,9 +11,34 @@
 <body>
   <div id="crawler-title">Movie List Crawler</div>
   <div id="crawl-content">
-    <input id="genres" placeholder="Genre = comedy">
-    <input id="startDate" placeholder="Start = 2018-01-01">
-    <input id="endDate" placeholder="End = 2018-12-31">
+    <select id="genres">
+      <option value="action">Action</option>
+      <option value="adventure">Adventure</option>
+      <option value="animation">Animation</option>
+      <option value="biography">Biography</option>
+      <option value="comedy">Comedy</option>
+      <option value="crime">Crime</option>
+      <option value="documentary">Documentary</option>
+      <option value="drama">Drama</option>
+      <option value="family">Family</option>
+      <option value="fantasy">Fantasy</option>
+      <option value="film noir">Film Noir</option>
+      <option value="history">History</option>
+      <option value="horror">Horror</option>
+      <option value="music">Music</option>
+      <option value="musical">Musical</option>
+      <option value="mystery">Mystery</option>
+      <option value="romance">Romance</option>
+      <option value="sci-fi">Sci-Fi</option>
+      <option value="short film">Short Film</option>
+      <option value="sport">Sport</option>
+      <option value="superhero">Superhero</option>
+      <option value="thriller">Thriller</option>
+      <option value="war">War</option>
+      <option value="western">Western</option>
+    </select>
+    <input id="startDate" placeholder="Start = 2018">
+    <input id="endDate" placeholder="End = 2018">
     <input id="quantity" placeholder="Quantity = 250">
     <button id="getListButton">Gönder</button>
     <div id="response-field">
@@ -21,18 +46,26 @@
   </div>
   <script>
     jQuery('body').on('click', '#getListButton', function () {
-      jQuery.get("/api/getMovieList?genre=" + jQuery('#genres').val() + "&year=" + jQuery('#startDate').val() + "," + jQuery('#endDate').val() + "&quantity=" + jQuery('#quantity').val(), function (data) {
-        console.log('Finished.!!');
-        jQuery('#response-field').html('');
-        window.rawData = data;
-        /*for (var key in window.rawData) {
-          // skip loop if the property is from prototype
-          var keyFixed = typeof window.rawData[key] === 'string' ? window.rawData[key] : JSON.stringify(window
-            .rawData[key]);
-          jQuery('#response-field').append(jQuery('<div class="response-item"> <span class="item-key">' + key +
-            '</span><span class="item-value">' + keyFixed + '</span></div>'));
-        }*/
-      });
+      if (jQuery('#startDate').val() !== "" && jQuery('#endDate').val() !== "" && jQuery('#quantity').val() !== "") {
+        jQuery.get("/api/getMovieList?genre=" + jQuery('#genres').val() + "&year=" + jQuery('#startDate').val() + "-01-01," + jQuery('#endDate').val() + "-12-31&quantity=" + jQuery('#quantity').val(), function (data) {
+          console.log('Finished.!!');
+          jQuery('#response-field').html('');
+          window.rawData = data;
+          var showMoviesData = window.rawData.moviesDetails.slice(0,10);
+
+          for (var i=0 ; i < showMoviesData.length ; i++) {
+            var thisItem = showMoviesData[i];
+            jQuery('#response-field').append(jQuery('<div class="response-item" style="width:225px;margin: 10px 0;border: unset;"><a href="'+thisItem["trailer_link"]+
+              '" style="color: #000;" target="_blank"><img src="'+thisItem.image+
+              '" style="width: 150px;height: 225px;"><span class="item-name" style="position: relative;width: 100%;float: left;font-size:18px;">'+thisItem.title+
+                '</span><span style="width: 100%;float: left;font-size: 15px;">Yıl: '+thisItem.release_date+
+                  '</span><span class="item-id" style="width: 100%;float: left;">'+thisItem.imdb_id+
+                    '</span></a></div>'));
+          }
+        });
+      }else {
+        jQuery('#response-field').html('Tüm alanları doldurun!');
+      }
     })
   </script>
 </body>

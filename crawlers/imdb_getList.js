@@ -31,7 +31,7 @@ class CrawlerGetList {
       }
     })
 
-    listCrawler.queue('https://www.imdb.com/search/title/?title_type=feature&view=simple&genres=' + this.queryList.genre + '&year=' + this.queryList.startDate + ',' + this.queryList.endDate)
+    listCrawler.queue('https://www.imdb.com/search/title/?title_type=feature&view=simple&genres=' + this.queryList.genre + '&year=' + this.queryList.year)
     
     // when all requests are completed
     listCrawler.on('drain', () => {
@@ -39,7 +39,7 @@ class CrawlerGetList {
         this.imdb_idList = this.imdb_idList.slice(0,this.queryList.quantity);
         callback(this);
       }else if (!thatsAll) {
-        listCrawler.queue('https://www.imdb.com/search/title/?title_type=feature&view=simple&genres=' + this.queryList.genre + '&year=' + this.queryList.startDate + ',' + this.queryList.endDate + '&start=' + (this.imdb_idList.length+1).toString())
+        listCrawler.queue('https://www.imdb.com/search/title/?title_type=feature&view=simple&genres=' + this.queryList.genre + '&year=' + this.queryList.year + '&start=' + (this.imdb_idList.length+1).toString())
       }
     })
   }

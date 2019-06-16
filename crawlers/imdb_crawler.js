@@ -42,6 +42,7 @@ class CrawlerImdb {
     }
 
     const finish = () => {
+      this.status = "Success";
       callback(this)
     }
 
@@ -179,7 +180,11 @@ class CrawlerImdb {
           finishDetails()
         })
       }catch (err) {
-        console.log(err.toString())
+        console.log('imdb_crawler --> ' + err.toString())
+        callback({
+          "id": this.imdb_id,
+          "status": "Failed"
+        })
       }
     }
     

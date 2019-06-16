@@ -102,18 +102,41 @@ app.get('/api/getImdbSearchResults', function (req, res) {
 });
 
 app.get('/api/getMovieList', function (req, res) {
-  let queryList = {
-    genre: req.query.genre,
-    startDate: req.query.startDate,
-    endDate: req.query.endDate,
-    quantity: parseInt(req.query.quantity)
-  }
-  let imdbGetList = new CrawlerGetList(queryList)
+  if (req.query.genre && req.query.year && req.query.quantity) {
+    let queryList = {
+      genre: req.query.genre,
+      year: req.query.year,
+      quantity: parseInt(req.query.quantity),
+      failedIds: []
+    }
+    let imdbGetList = new CrawlerGetList(queryList)
 
-  imdbGetList.getImdbData(function (data) {
-    res.status(200)
-        .send(data);
-  })
+    imdbGetList.getImdbData(function (getListData) {
+      queryList["moviesDetails"] = [];
+      let failedCount = 0;
+      let imdbIdList = getListData.imdb_idList;
+      imdbIdList.forEach(element => {
+        let imdbCrawler = new CrawlerImdb(element)
+        imdbCrawler.getImdbData(function (data) {
+          if (data.status === "Success") {
+            queryList["moviesDetails"].push(data);
+          }else {
+            queryList.failedIds.push(data.id);
+            failedCount++;
+          }
+          if (queryList["moviesDetails"].length === (imdbIdList.length - failedCount)) {
+            queryList.quantity = queryList.quantity - failedCount;
+            res.status(200)
+              .send(queryList)
+          }
+        })
+      });
+      
+    })
+  }else {
+    res.status(304)
+      .send("Eksik bilgi girdiniz")
+  }
 });
 
 app.listen(process.env.PORT || 3000, function () {
